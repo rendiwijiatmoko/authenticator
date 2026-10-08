@@ -276,6 +276,11 @@ struct AccountCard: View {
     var onCopy: () -> Void
 
     private var remaining: Int { account.remaining(at: date) }
+    private var countdownColor: Color {
+        if remaining <= 5 { return .red }
+        if remaining <= 10 { return .yellow }
+        return AuthenticatorTheme.primary
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -294,11 +299,12 @@ struct AccountCard: View {
                 }
                 Spacer(minLength: 8)
                 ZStack {
-                    Circle().stroke(AuthenticatorTheme.primary.opacity(0.12), lineWidth: 4)
+                    Circle().stroke(countdownColor.opacity(0.12), lineWidth: 4)
                     Circle().trim(from: 0, to: CGFloat(remaining) / CGFloat(account.period))
-                        .stroke(AuthenticatorTheme.gradient, style: StrokeStyle(lineWidth: 4, lineCap: .round))
+                        .stroke(countdownColor.gradient, style: StrokeStyle(lineWidth: 4, lineCap: .round))
                         .rotationEffect(.degrees(-90))
                     Text("\(remaining)").font(.system(size: 14, weight: .semibold, design: .rounded)).monospacedDigit()
+                        .foregroundStyle(countdownColor)
                 }
                 .frame(width: 34, height: 34)
                 .accessibilityLabel("\(remaining) seconds remaining")

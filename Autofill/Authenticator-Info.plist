@@ -4,8 +4,6 @@
 <dict>
 	<key>AutoFillKeychainAccessGroup</key>
 	<string>$(AppIdentifierPrefix)xyz.0xmwehehe.Authenticator.autofill</string>
-	<key>CFBundleDisplayName</key>
-	<string>Aster Auth</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

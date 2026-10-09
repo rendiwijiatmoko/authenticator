@@ -1,0 +1,40 @@
+name: iOS CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: |
+          xcodebuild -version
+          xcodebuild -showsdks
+
+      - name: Build app
+        run: |
+          xcodebuild \
+            -project Authenticator.xcodeproj \
+            -scheme Authenticator \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Run TOTP tests
+        run: |
+          swiftc Authenticator/TOTPAccount.swift Tests/TOTPTests.swift \
+            -o "$RUNNER_TEMP/totp-tests"
+          "$RUNNER_TEMP/totp-tests"
